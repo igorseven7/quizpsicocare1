@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz para Corretores Parceiros - Psicocare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        /* Cores Customizadas da Psicocare */
+        .bg-psico-blue-dark { background-color: #001A49; }
+        .bg-psico-blue-primary { background-color: #0055FF; }
+        .hover\:bg-psico-blue-primary-darker:hover { background-color: #0048d9; }
+        .text-psico-blue-dark { color: #001A49; }
+        .text-psico-blue-primary { color: #0055FF; }
+        .border-psico-blue-light { border-color: #F0F5FF; }
+        .bg-psico-blue-light { background-color: #F0F5FF; }
+        .focus\:ring-psico-blue-primary:focus {
+            --tw-ring-color: #0055FF;
+        }
+        .focus\:border-psico-blue-primary:focus {
+            --tw-border-opacity: 1;
+            border-color: #0055FF;
+        }
+        .gemini-button {
+            background: linear-gradient(90deg, #0055FF, #3B82F6);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-lg mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        
+        <!-- Passo 1: Página de Captura para Corretores -->
+        <div id="capture-page" class="p-6 md:p-8 fade-in">
+            <div class="text-center">
+                <h1 class="text-2xl md:text-3xl font-bold text-psico-blue-dark pt-8">Quer descobrir uma nova fonte de receita na sua carteira de clientes atual? 💰</h1>
+                <p class="mt-3 text-gray-600">Responda 5 perguntas rápidas e veja como aumentar seu faturamento e blindar seus clientes da concorrência.</p>
+            </div>
+            <form id="capture-form" class="mt-8 space-y-4">
+                <div>
+                    <label for="name" class="text-sm font-medium text-gray-700">Seu nome</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-3 bg-gray-100 border-gray-300 rounded-lg focus:ring-2 focus:ring-psico-blue-primary focus:border-psico-blue-primary">
+                </div>
+                <div>
+                    <label for="whatsapp" class="text-sm font-medium text-gray-700">Seu WhatsApp com DDD</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(11) 99999-9999" required class="mt-1 block w-full px-4 py-3 bg-gray-100 border-gray-300 rounded-lg focus:ring-2 focus:ring-psico-blue-primary focus:border-psico-blue-primary">
+                </div>
+                 <div class="flex items-start">
+                    <input id="consent" type="checkbox" required class="h-4 w-4 mt-1 text-psico-blue-primary border-gray-300 rounded focus:ring-psico-blue-primary">
+                    <label for="consent" class="ml-2 text-sm text-gray-600">Concordo em receber o diagnóstico e outras comunicações da Psicocare via WhatsApp.</label>
+                </div>
+                <button type="submit" class="w-full bg-psico-blue-primary text-white font-bold py-3 px-4 rounded-lg hover:bg-psico-blue-primary-darker transition-colors duration-300 shadow-md">
+                    INICIAR DIAGNÓSTICO 🚀
+                </button>
+            </form>
+        </div>
+
+        <!-- Passo 2: Página do Quiz para Corretores -->
+        <div id="quiz-page" class="p-6 md:p-8 hidden">
+            <div id="progress-container" class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                <div id="progress-bar" class="bg-psico-blue-primary h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
+            </div>
+            <div id="question-container" class="fade-in">
+                <h2 id="question-title" class="text-xl md:text-2xl font-semibold text-center text-psico-blue-dark"></h2>
+                <div id="options-container" class="mt-6 space-y-3"></div>
+            </div>
+        </div>
+
+        <!-- Passo 3: Página de Análise -->
+        <div id="analysis-page" class="p-8 text-center hidden">
+            <div class="flex justify-center items-center mb-4">
+                 <svg class="animate-spin h-12 w-12 text-psico-blue-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-psico-blue-dark">Analisando seu potencial de mercado...</h2>
+            <p id="analysis-text" class="mt-3 text-gray-600">Estamos identificando as melhores oportunidades para sua carteira de clientes.</p>
+        </div>
+
+        <!-- Passo 4: Página de Resultado e Oferta para Parceiros -->
+        <div id="result-page" class="p-6 md:p-8 hidden bg-psico-blue-light">
+            <div class="text-center fade-in">
+                <h2 id="result-title" class="text-2xl md:text-3xl font-bold text-psico-blue-dark"></h2>
+                <p id="result-analysis" class="mt-3 text-gray-700"></p>
+            </div>
+            
+            <!-- NOVA SEÇÃO: GERADOR DE PITCH COM GEMINI API -->
+            <div id="gemini-feature" class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200 fade-in">
+                <h3 class="text-center text-xl font-bold text-psico-blue-dark">Sua Ferramenta de Vendas com IA ✨</h3>
+                <p class="text-center text-sm text-gray-600 mt-1">Use este rascunho de e-mail, gerado pela IA do Gemini, para iniciar a conversa com seus clientes.</p>
+                <button id="generate-pitch-btn" class="w-full mt-4 gemini-button text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity duration-300 shadow-md">
+                    Gerar Pitch de Vendas Personalizado ✨
+                </button>
+                <div id="pitch-loading" class="text-center p-4 text-gray-600 hidden">
+                    <p>Gerando seu pitch com IA... 🤖</p>
+                </div>
+                <div id="pitch-result-container" class="hidden mt-4">
+                    <textarea id="pitch-result" readonly class="w-full h-48 p-3 bg-gray-100 border border-gray-300 rounded-lg text-sm"></textarea>
+                    <button id="copy-pitch-btn" class="w-full mt-2 bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">Copiar Texto</button>
+                    <p id="copy-feedback" class="text-center text-sm text-green-600 mt-2 hidden">Texto copiado!</p>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h3 class="text-center text-xl font-bold text-psico-blue-dark">Torne-se um Parceiro Psicocare e Saia na Frente 🏆</h3>
+                <p class="text-center text-sm text-gray-600">Ofereça a solução que seus clientes precisam e que seus concorrentes ainda não têm.</p>
+                
+                <ul class="mt-6 space-y-4">
+                    <li class="flex items-start">
+                        <span class="text-psico-blue-primary mt-1 font-bold">📈</span>
+                        <p class="ml-3 text-gray-700"><strong class="font-semibold text-psico-blue-dark">Aumente sua Receita:</strong> Adicione ao seu portfólio um produto inovador e de alta demanda.</p>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-psico-blue-primary mt-1 font-bold">🤝</span>
+                        <p class="ml-3 text-gray-700"><strong class="font-semibold text-psico-blue-dark">Fidelize Seus Clientes:</strong> Resolva problemas reais do RH, como absenteísmo e rotatividade.</p>
+                    </li>
+                     <li class="flex items-start">
+                        <span class="text-psico-blue-primary mt-1 font-bold">🛡️</span>
+                        <p class="ml-3 text-gray-700"><strong class="font-semibold text-psico-blue-dark">Blinde sua Carteira:</strong> Ofereça um diferencial claro que seus concorrentes não possuem.</p>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-psico-blue-primary mt-1 font-bold">🧑‍🏫</span>
+                        <p class="ml-3 text-gray-700"><strong class="font-semibold text-psico-blue-dark">Suporte Completo para Vendas:</strong> Conte com nosso time e materiais de apoio.</p>
+                    </li>
+                </ul>
+
+                <a href="https://psicocare.co/Contato?assunto=Solu%C3%A7%C3%A3o%20Empresarial" target="_blank" class="block w-full mt-8 bg-psico-blue-primary text-white text-center font-bold py-4 px-4 rounded-lg hover:bg-psico-blue-primary-darker transition-colors duration-300 shadow-lg">
+                    QUERO SER UM PARCEIRO
+                </a>
+
+                <p class="text-xs text-gray-500 text-center mt-4">Fale com nosso especialista em parcerias e descubra seus benefícios.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ELEMENTOS DO DOM ---
+        const capturePage = document.getElementById('capture-page');
+        const quizPage = document.getElementById('quiz-page');
+        const analysisPage = document.getElementById('analysis-page');
+        const resultPage = document.getElementById('result-page');
+
+        const captureForm = document.getElementById('capture-form');
+        const progressBar = document.getElementById('progress-bar');
+        const questionTitle = document.getElementById('question-title');
+        const optionsContainer = document.getElementById('options-container');
+        
+        const analysisText = document.getElementById('analysis-text');
+        const resultTitle = document.getElementById('result-title');
+        const resultAnalysis = document.getElementById('result-analysis');
+
+        // Elementos da feature Gemini
+        const generatePitchBtn = document.getElementById('generate-pitch-btn');
+        const pitchLoading = document.getElementById('pitch-loading');
+        const pitchResultContainer = document.getElementById('pitch-result-container');
+        const pitchResult = document.getElementById('pitch-result');
+        const copyPitchBtn = document.getElementById('copy-pitch-btn');
+        const copyFeedback = document.getElementById('copy-feedback');
+
+        // --- DADOS DO QUIZ PARA CORRETORES ---
+        const quizData = [
+            { question: "Pensando na sua carteira de clientes empresariais, qual é seu maior objetivo para o próximo semestre?", options: [ { text: "Aumentar o faturamento total.", score: 2 }, { text: "Reter 100% dos clientes atuais.", score: 2 }, { text: "Conquistar novas contas de grande porte.", score: 2 }, { text: "Tornar-me um parceiro mais estratégico para eles.", score: 1 } ] },
+            { question: "Com que frequência um cliente empresarial te procura com problemas que vão além do plano de saúde, como absenteísmo ou rotatividade?", options: [ { text: "Frequentemente, é um problema comum.", score: 1 }, { text: "Às vezes, principalmente em empresas maiores.", score: 2 }, { text: "Raramente, não é um assunto que chega até mim.", score: 3 }, { text: "Nunca, eles não me veem como alguém para resolver isso.", score: 4 } ] },
+            { question: "Imagine que você pudesse oferecer uma solução inovadora que 9 em cada 10 empresas ainda não têm. Como você usaria isso a seu favor?", options: [ { text: "Para abrir portas em novas prospecções.", score: 2 }, { text: "Para blindar minha carteira da concorrência.", score: 2 }, { text: "Para aumentar meu comissionamento.", score: 2 }, { text: "Todas as anteriores.", score: 1 } ] },
+            { question: "Qual o principal obstáculo que te impede de vender mais para sua base de clientes atual?", options: [ { text: "Falta de novos produtos para oferecer.", score: 1 }, { text: "Concorrência com preços agressivos.", score: 2 }, { text: "O cliente não vê valor em outras soluções.", score: 3 }, { text: "Falta de tempo para uma abordagem consultiva.", score: 2 } ] },
+            { question: "Ao final de uma negociação, o que você acredita que mais fideliza um cliente empresarial?", options: [ { text: "O menor preço.", score: 4 }, { text: "Um bom relacionamento pessoal.", score: 3 }, { text: "Apresentar soluções que resolvem problemas reais do negócio.", score: 1 }, { text: "A força da marca da seguradora.", score: 2 } ] }
+        ];
+
+        // --- ESTADO DA APLICAÇÃO ---
+        let currentQuestionIndex = 0;
+        let userScore = 0;
+        let userName = '';
+        let diagnosisForAI = '';
+
+        // --- FUNÇÕES ---
+
+        captureForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            userName = document.getElementById('name').value;
+            capturePage.classList.add('hidden');
+            quizPage.classList.remove('hidden');
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            optionsContainer.innerHTML = '';
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionTitle.innerText = currentQuestion.question;
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option.text;
+                button.classList.add('w-full', 'text-left', 'p-4', 'border', 'border-gray-300', 'rounded-lg', 'hover:bg-psico-blue-light', 'hover:border-psico-blue-primary', 'transition-all', 'duration-200', 'focus:ring-2', 'focus:ring-psico-blue-primary');
+                button.onclick = () => selectOption(option.score);
+                optionsContainer.appendChild(button);
+            });
+
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function selectOption(score) {
+            userScore += score;
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quizData.length) {
+                questionTitle.parentElement.classList.remove('fade-in');
+                void questionTitle.parentElement.offsetWidth;
+                questionTitle.parentElement.classList.add('fade-in');
+                loadQuestion();
+            } else {
+                progressBar.style.width = '100%';
+                showAnalysis();
+            }
+        }
+        
+        function showAnalysis() {
+            quizPage.classList.add('hidden');
+            analysisPage.classList.remove('hidden');
+            
+            setTimeout(() => {
+                analysisText.innerText = "Calculando o potencial de receita para sua corretora...";
+            }, 1500);
+
+            setTimeout(() => {
+                showResult();
+            }, 3000);
+        }
+
+        function showResult() {
+            analysisPage.classList.add('hidden');
+            resultPage.classList.remove('hidden');
+
+            if (userScore <= 7) {
+                resultTitle.innerText = `Diagnóstico: ${userName}, você já tem uma visão estratégica do seu negócio! 🎯`;
+                diagnosisForAI = "Este corretor tem uma visão estratégica e entende a importância de ser um parceiro indispensável para os clientes.";
+                resultAnalysis.innerText = "Você entende que o caminho para o crescimento é se tornar um parceiro indispensável para seus clientes. A Psicocare oferece a ferramenta perfeita para você acelerar esse processo e monetizar essa visão.";
+            } else {
+                resultTitle.innerText = `Diagnóstico: ${userName}, você tem uma grande oportunidade de crescimento em mãos! 💡`;
+                diagnosisForAI = "Este corretor enfrenta desafios comuns como concorrência e falta de novos produtos, e busca formas de crescer e fidelizar clientes.";
+                resultAnalysis.innerText = "Seus desafios para crescer e fidelizar clientes podem ser resolvidos com a oferta de soluções estratégicas que vão além do óbvio. O mercado de saúde mental corporativa é a chave para destravar um novo potencial de receita na sua carteira.";
+            }
+        }
+        
+        // --- FUNÇÕES DA GEMINI API ---
+
+        generatePitchBtn.addEventListener('click', async () => {
+            pitchLoading.classList.remove('hidden');
+            generatePitchBtn.classList.add('hidden');
+            pitchResultContainer.classList.add('hidden');
+            copyFeedback.classList.add('hidden');
+
+            const prompt = `
+                Você é um especialista em marketing e vendas B2B, focado em criar argumentos de venda para corretores de seguros. Seu tom é profissional, persuasivo e focado em benefícios.
+                Crie um email curto (máximo de 150 palavras) para um corretor de seguros chamado "${userName}" usar para apresentar a solução de saúde mental corporativa da Psicocare a um cliente empresarial.
+                O perfil deste corretor é: "${diagnosisForAI}".
+                O email deve:
+                1. Começar com uma saudação ao cliente (use "[Nome do Cliente]" como placeholder).
+                2. Mencionar um desafio comum do RH (como rotatividade, absenteísmo ou engajamento).
+                3. Apresentar a Psicocare como uma solução estratégica que vai além do plano de saúde tradicional, ajudando a resolver esses desafios.
+                4. Destacar 1 ou 2 benefícios chave (ex: conformidade com NRs 1 e 17, redução de custos com turnover, aumento da produtividade).
+                5. Terminar com uma chamada para ação clara para agendar uma conversa.
+                O email deve ser escrito em português do Brasil.
+            `;
+
+            try {
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Chave de API será injetada pelo ambiente
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    pitchResult.value = text;
+                    pitchResultContainer.classList.remove('hidden');
+                } else {
+                    throw new Error("Resposta da API inválida.");
+                }
+
+            } catch (error) {
+                console.error("Erro ao chamar a API Gemini:", error);
+                pitchResult.value = "Desculpe, não foi possível gerar o pitch no momento. Tente novamente mais tarde.";
+                pitchResultContainer.classList.remove('hidden');
+            } finally {
+                pitchLoading.classList.add('hidden');
+            }
+        });
+
+        copyPitchBtn.addEventListener('click', () => {
+            pitchResult.select();
+            document.execCommand('copy'); // Usando execCommand para melhor compatibilidade em iframes
+            copyFeedback.classList.remove('hidden');
+            setTimeout(() => {
+                copyFeedback.classList.add('hidden');
+            }, 2000);
+        });
+
+    </script>
+</body>
+</html>
