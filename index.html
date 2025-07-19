@@ -37,9 +37,6 @@
             --tw-border-opacity: 1;
             border-color: #0055FF;
         }
-        .gemini-button {
-            background: linear-gradient(90deg, #0055FF, #3B82F6);
-        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
@@ -100,23 +97,6 @@
                 <h2 id="result-title" class="text-2xl md:text-3xl font-bold text-psico-blue-dark"></h2>
                 <p id="result-analysis" class="mt-3 text-gray-700"></p>
             </div>
-            
-            <!-- NOVA SEÇÃO: GERADOR DE PITCH COM GEMINI API -->
-            <div id="gemini-feature" class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200 fade-in">
-                <h3 class="text-center text-xl font-bold text-psico-blue-dark">Sua Ferramenta de Vendas com IA ✨</h3>
-                <p class="text-center text-sm text-gray-600 mt-1">Use este rascunho de e-mail, gerado pela IA do Gemini, para iniciar a conversa com seus clientes.</p>
-                <button id="generate-pitch-btn" class="w-full mt-4 gemini-button text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity duration-300 shadow-md">
-                    Gerar Pitch de Vendas Personalizado ✨
-                </button>
-                <div id="pitch-loading" class="text-center p-4 text-gray-600 hidden">
-                    <p>Gerando seu pitch com IA... 🤖</p>
-                </div>
-                <div id="pitch-result-container" class="hidden mt-4">
-                    <textarea id="pitch-result" readonly class="w-full h-48 p-3 bg-gray-100 border border-gray-300 rounded-lg text-sm"></textarea>
-                    <button id="copy-pitch-btn" class="w-full mt-2 bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">Copiar Texto</button>
-                    <p id="copy-feedback" class="text-center text-sm text-green-600 mt-2 hidden">Texto copiado!</p>
-                </div>
-            </div>
 
             <div class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200">
                 <h3 class="text-center text-xl font-bold text-psico-blue-dark">Torne-se um Parceiro Psicocare e Saia na Frente 🏆</h3>
@@ -166,14 +146,6 @@
         const resultTitle = document.getElementById('result-title');
         const resultAnalysis = document.getElementById('result-analysis');
 
-        // Elementos da feature Gemini
-        const generatePitchBtn = document.getElementById('generate-pitch-btn');
-        const pitchLoading = document.getElementById('pitch-loading');
-        const pitchResultContainer = document.getElementById('pitch-result-container');
-        const pitchResult = document.getElementById('pitch-result');
-        const copyPitchBtn = document.getElementById('copy-pitch-btn');
-        const copyFeedback = document.getElementById('copy-feedback');
-
         // --- DADOS DO QUIZ PARA CORRETORES ---
         const quizData = [
             { question: "Pensando na sua carteira de clientes empresariais, qual é seu maior objetivo para o próximo semestre?", options: [ { text: "Aumentar o faturamento total.", score: 2 }, { text: "Reter 100% dos clientes atuais.", score: 2 }, { text: "Conquistar novas contas de grande porte.", score: 2 }, { text: "Tornar-me um parceiro mais estratégico para eles.", score: 1 } ] },
@@ -187,7 +159,6 @@
         let currentQuestionIndex = 0;
         let userScore = 0;
         let userName = '';
-        let diagnosisForAI = '';
 
         // --- FUNÇÕES ---
 
@@ -250,82 +221,12 @@
 
             if (userScore <= 7) {
                 resultTitle.innerText = `Diagnóstico: ${userName}, você já tem uma visão estratégica do seu negócio! 🎯`;
-                diagnosisForAI = "Este corretor tem uma visão estratégica e entende a importância de ser um parceiro indispensável para os clientes.";
                 resultAnalysis.innerText = "Você entende que o caminho para o crescimento é se tornar um parceiro indispensável para seus clientes. A Psicocare oferece a ferramenta perfeita para você acelerar esse processo e monetizar essa visão.";
             } else {
                 resultTitle.innerText = `Diagnóstico: ${userName}, você tem uma grande oportunidade de crescimento em mãos! 💡`;
-                diagnosisForAI = "Este corretor enfrenta desafios comuns como concorrência e falta de novos produtos, e busca formas de crescer e fidelizar clientes.";
                 resultAnalysis.innerText = "Seus desafios para crescer e fidelizar clientes podem ser resolvidos com a oferta de soluções estratégicas que vão além do óbvio. O mercado de saúde mental corporativa é a chave para destravar um novo potencial de receita na sua carteira.";
             }
         }
-        
-        // --- FUNÇÕES DA GEMINI API ---
-
-        generatePitchBtn.addEventListener('click', async () => {
-            pitchLoading.classList.remove('hidden');
-            generatePitchBtn.classList.add('hidden');
-            pitchResultContainer.classList.add('hidden');
-            copyFeedback.classList.add('hidden');
-
-            const prompt = `
-                Você é um especialista em marketing e vendas B2B, focado em criar argumentos de venda para corretores de seguros. Seu tom é profissional, persuasivo e focado em benefícios.
-                Crie um email curto (máximo de 150 palavras) para um corretor de seguros chamado "${userName}" usar para apresentar a solução de saúde mental corporativa da Psicocare a um cliente empresarial.
-                O perfil deste corretor é: "${diagnosisForAI}".
-                O email deve:
-                1. Começar com uma saudação ao cliente (use "[Nome do Cliente]" como placeholder).
-                2. Mencionar um desafio comum do RH (como rotatividade, absenteísmo ou engajamento).
-                3. Apresentar a Psicocare como uma solução estratégica que vai além do plano de saúde tradicional, ajudando a resolver esses desafios.
-                4. Destacar 1 ou 2 benefícios chave (ex: conformidade com NRs 1 e 17, redução de custos com turnover, aumento da produtividade).
-                5. Terminar com uma chamada para ação clara para agendar uma conversa.
-                O email deve ser escrito em português do Brasil.
-            `;
-
-            try {
-                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                const payload = { contents: chatHistory };
-                const apiKey = ""; // Chave de API será injetada pelo ambiente
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    pitchResult.value = text;
-                    pitchResultContainer.classList.remove('hidden');
-                } else {
-                    throw new Error("Resposta da API inválida.");
-                }
-
-            } catch (error) {
-                console.error("Erro ao chamar a API Gemini:", error);
-                pitchResult.value = "Desculpe, não foi possível gerar o pitch no momento. Tente novamente mais tarde.";
-                pitchResultContainer.classList.remove('hidden');
-            } finally {
-                pitchLoading.classList.add('hidden');
-            }
-        });
-
-        copyPitchBtn.addEventListener('click', () => {
-            pitchResult.select();
-            document.execCommand('copy'); // Usando execCommand para melhor compatibilidade em iframes
-            copyFeedback.classList.remove('hidden');
-            setTimeout(() => {
-                copyFeedback.classList.add('hidden');
-            }, 2000);
-        });
-
     </script>
 </body>
 </html>
