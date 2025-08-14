@@ -159,6 +159,7 @@
         let currentQuestionIndex = 0;
         let userScore = 0;
         let userName = '';
+        let userAnswers = []; // Array para armazenar as respostas
 
         // --- FUNÇÕES ---
 
@@ -179,7 +180,8 @@
                 const button = document.createElement('button');
                 button.innerText = option.text;
                 button.classList.add('w-full', 'text-left', 'p-4', 'border', 'border-gray-300', 'rounded-lg', 'hover:bg-psico-blue-light', 'hover:border-psico-blue-primary', 'transition-all', 'duration-200', 'focus:ring-2', 'focus:ring-psico-blue-primary');
-                button.onclick = () => selectOption(option.score);
+                // Modificado para passar o texto da opção para a função selectOption
+                button.onclick = () => selectOption(option.score, option.text);
                 optionsContainer.appendChild(button);
             });
 
@@ -187,7 +189,14 @@
             progressBar.style.width = `${progress}%`;
         }
 
-        function selectOption(score) {
+        // Modificado para aceitar o texto da resposta e armazená-lo
+        function selectOption(score, answerText) {
+            const currentQuestion = quizData[currentQuestionIndex];
+            userAnswers.push({
+                question: currentQuestion.question,
+                answer: answerText
+            });
+
             userScore += score;
             currentQuestionIndex++;
 
@@ -215,7 +224,8 @@
             }, 3000);
         }
 
-        function showResult() {
+        // Modificado para ser uma função assíncrona e enviar os dados para o webhook
+        async function showResult() {
             analysisPage.classList.add('hidden');
             resultPage.classList.remove('hidden');
 
@@ -225,6 +235,36 @@
             } else {
                 resultTitle.innerText = `Diagnóstico: ${userName}, você tem uma grande oportunidade de crescimento em mãos! 💡`;
                 resultAnalysis.innerText = "Seus desafios para crescer e fidelizar clientes podem ser resolvidos com a oferta de soluções estratégicas que vão além do óbvio. O mercado de saúde mental corporativa é a chave para destravar um novo potencial de receita na sua carteira.";
+            }
+
+            // --- LÓGICA DO WEBHOOK ---
+            const webhookUrl = 'https://igor-n8n.7hn4wr.easypanel.host/webhook-test/56eaf115-9d2b-4ac4-a268-7a60ae52e470';
+            
+            const dataToSend = {
+                name: userName,
+                whatsapp: document.getElementById('whatsapp').value,
+                score: userScore,
+                resultTitle: resultTitle.innerText,
+                resultAnalysis: resultAnalysis.innerText,
+                quizResponses: userAnswers
+            };
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend),
+                });
+                
+                if (response.ok) {
+                    console.log('Webhook disparado com sucesso!');
+                } else {
+                    console.error('Falha ao disparar o webhook:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Erro ao enviar dados para o webhook:', error);
             }
         }
     </script>
